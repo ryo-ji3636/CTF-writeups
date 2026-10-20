@@ -13,3 +13,11 @@ Third, I found out how to look for hidden files. The directory `inhere` had hidd
 Next, I learned `file ./*`. With this command, I could find the type of each file and pick out the right file.
 
 Finally, I learned `find`. If I want to look for a file that is a regular file, 1033 bytes, and not executable, I can use this command: `find . -type f -size 1033c ! -executable`. Therefore, I could find the correct file among many files.
+
+
+## OverTheWire Bandit: Level6-10
+First, I learned how to use find and 2>/dev/null. I couldn't find correct file because there are many files. So, I used find and 2>/dev/null.
+
+Second, I learned grep. It is useful to find the one word in the file that has mach data.
+
+Moreover, I learned sort and uniq. It is good wat to find the sentences that occurs more than twice.
