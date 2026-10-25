@@ -15,7 +15,7 @@ Next, I learned `file ./*`. With this command, I could find the type of each fil
 Finally, I learned `find`. If I want to look for a file that is a regular file, 1033 bytes, and not executable, I can use this command: `find . -type f -size 1033c ! -executable`. Therefore, I could find the correct file among many files.
 
 
-## OverTheWire Bandit: Levels 6-12
+## OverTheWire Bandit: Levels 6-13
 
 ### Level 6
 Goal: Find a file owned by user `bandit7`, group `bandit6`, and 33 bytes in size.
@@ -89,3 +89,13 @@ Then I repeated these steps:
 Why: I made a working directory in `/tmp` because I can't create files in my home directory. `xxd -r` changes hex back to binary.
 
 Mistake: `tar xf` doesn't delete the original tar file. It makes a new file, so I checked the newest file every time.
+
+### Level 13
+Goal: Log in as bandit14 with a private SSH key.
+
+scp -P 2220 bandit13@bandit.labs.overthewire.org:sshkey.private .
+chmod 600 sshkey.private
+ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
+
+Why: I downloaded the key with `scp`. SSH ignores a private key that other users can read, so I used `chmod 600`.
+The server checks the key, so I didn't need a password.
