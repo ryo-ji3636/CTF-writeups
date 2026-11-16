@@ -99,3 +99,46 @@ ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
 
 Why: I downloaded the key with `scp`. SSH ignores a private key that other users can read, so I used `chmod 600`.
 The server checks the key, so I didn't need a password.
+
+### Level 14
+Goal: Send the current level's password to a service listening on port 30000 on localhost.
+
+```bash
+cat /etc/bandit_pass/bandit14
+nc localhost 30000
+```
+
+Why: `nc` connects to a TCP service. I entered the current password and received the next password. Normal TCP communication is not encrypted.
+
+### Level 15
+Goal: Send the current password to a service using an encrypted TLS connection.
+
+```bash
+openssl s_client -connect localhost:30001 -quiet
+```
+
+Why: `openssl s_client` establishes a TLS connection. Unlike normal `nc` communication, TLS encrypts the data. I entered the password and received the next password.
+
+### Level 16
+Goal: Find a TLS service listening on a port between 31000 and 32000 that returns the credentials for the next level.
+
+```bash
+nmap -p 31000-32000 localhost
+openssl s_client -connect localhost:<PORT> -quiet
+```
+
+Why: I used `nmap` to find open ports and tested them one by one using OpenSSL. I found a service that returned an SSH private key.
+
+I saved the SSH private key on my Mac:
+
+```bash
+mkdir -p ~/.ssh/bandit
+chmod 700 ~/.ssh/bandit
+nano ~/.ssh/bandit/bandit17_key
+chmod 600 ~/.ssh/bandit/bandit17_key
+ssh -i ~/.ssh/bandit/bandit17_key -p 2220 bandit17@bandit.labs.overthewire.org
+```
+
+Why: I needed the SSH private key to log in as bandit17. I used `chmod 600` to protect the key. I connected from my Mac because SSH connections from localhost were blocked on the Bandit server.
+
+**What I Learned:** I learned how to use Netcat for TCP communication, OpenSSL for TLS communication, and Nmap to find open ports. I also practiced SSH private key authentication and file permissions.
